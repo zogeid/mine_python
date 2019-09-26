@@ -8,8 +8,6 @@ symbol = 'ADS.DE'
 datatype = 'json'
 api_key = '2HZ8XGG3MD98X75U'
 
-
-
 # True data vs. test data set
 datos_de_prueba = True
 if datos_de_prueba:
