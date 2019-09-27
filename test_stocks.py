@@ -45,3 +45,8 @@ def main():
 
     # Plot retrieved data
     plot(day_array)
+
+    conn.get_supports()
+
+
+main()

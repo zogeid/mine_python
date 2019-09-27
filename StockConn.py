@@ -1,6 +1,7 @@
 import requests
 from StockDay import StockDay
 from StockMetaData import *
+from StockDayData import *
 
 
 class StockConn:
@@ -15,6 +16,7 @@ class StockConn:
         self.historic_data = []
         if self.base_url is not None:
             self.url = self.compose_url()
+        self.stock_day_data = []
 
     def compose_url(self):
         url = self.base_url + '/query?function=' + self.function + '&symbol=' + self.symbol + '&datatype=' + self.datatype + '&apikey=' + self.api_key
@@ -56,3 +58,25 @@ class StockConn:
             return True
         else:
             return False
+
+    def get_supports(self):
+        for i, day_data in enumerate(self.historic_data):
+            if i < len(self.historic_data)-1 \
+                    and day_data.close < self.historic_data[i-1].close \
+                    and day_data.close < self.historic_data[i+1].close:
+                print(self.historic_data[i-1].close, "<", day_data.close, ">", self.historic_data[i+1].close, "is support")
+                stock_day_data = StockDayData()
+                stock_day_data.is_support = True
+                self.stock_day_data.append(stock_day_data) # TODO hacer solo un append entre sup y res
+            print("Day data", day_data.close)
+
+    def get_resistances(self):
+        for i, day_data in enumerate(self.historic_data):
+            if i < len(self.historic_data)-1 \
+                    and day_data.close > self.historic_data[i-1].close \
+                    and day_data.close > self.historic_data[i+1].close:
+                print(self.historic_data[i-1].close, ">", day_data.close, ">", self.historic_data[i+1].close, "is resistance")
+                stock_day_data = StockDayData()
+                stock_day_data.is_resistance = True
+                self.stock_day_data.append(stock_day_data)  # TODO hacer solo un append entre sup y res
+            print("Day data", day_data.close)
