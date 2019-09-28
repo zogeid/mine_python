@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['test_stocks.py'],
-             pathex=['C:\\Users\\dalares\\Google Drive\\stocks_python'],
+             pathex=['C:\\Users\\Diegolas\\PycharmProjects\\stocks_python'],
              binaries=[],
              datas=[],
              hiddenimports=[],

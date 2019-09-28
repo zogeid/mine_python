@@ -1,27 +1,34 @@
 class StockDay:
-    def __init__(self, day=None, apertura=None, max=None, min=None, cierre=None, ajustado=None, volumen=None,
-                 cantidaddividendo=None):
-        self.date = day
-        if apertura is not None:
-            self.open = float(apertura)
-        if max is not None:
-            self.high = float(max)
-        if min is not None:
-            self.low = float(min)
-        if cierre is not None:
-            self.close = float(cierre)
-        if ajustado is not None:
-            self.adjusted_close = float(ajustado)
-        self.volume = volumen
-        self.dividend_amount = cantidaddividendo
+    def __init__(self, date=None, open=None, high=None, low=None, close=None, adjusted_close=None, volume=None,
+                 dividend_amount=None):
+        self.date = date
+        self.volume = volume
+        self.dividend_amount = dividend_amount
 
-    def imprimir(self):
+        self.open = None
+        self.high = None
+        self.low = None
+        self.close = None
+        self.adjusted_close = None
+
+        if open is not None:
+            self.open = float(open)
+        if high is not None:
+            self.high = float(high)
+        if low is not None:
+            self.low = float(low)
+        if close is not None:
+            self.close = float(close)
+        if adjusted_close is not None:
+            self.adjusted_close = float(adjusted_close)
+
+    def print(self):
         print()
-        print("day:", self.date)
-        print("apertura:", self.open)
-        print("max:", self.high)
-        print("min:", self.low)
-        print("cierre:", self.close)
-        print("ajustado:", self.adjusted_close)
-        print("volumen:", self.volume)
-        print("cantidaddividendo:", self.dividend_amount)
+        print("Fecha:", self.date)
+        print("Apertura:", self.open)
+        print("Máximo:", self.high)
+        print("Mínimo:", self.low)
+        print("Cierre:", self.close)
+        print("Ajuste:", self.adjusted_close)
+        print("Volumen:", self.volume)
+        print("Dividendo:", self.dividend_amount)

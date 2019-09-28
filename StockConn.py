@@ -40,7 +40,7 @@ class StockConn:
     def parse_all_day_data(self, all_day_data):
         for i in all_day_data:
             day = all_day_data[i]
-            d = StockDay((i, " ", self.symbol), day['1. open'], day['2. high'], day['3. low'], day['4. close'],
+            d = StockDay(i, day['1. open'], day['2. high'], day['3. low'], day['4. close'],
                          day['5. adjusted close'], day['6. volume'], day['7. dividend amount'])
             self.historic_data.append(d)
         self.historic_data.reverse()
@@ -59,24 +59,23 @@ class StockConn:
         else:
             return False
 
-    def get_supports(self):
+    def get_supports_and_resistances(self):
         for i, day_data in enumerate(self.historic_data):
+            sdd = StockDayData(day_data)
             if i < len(self.historic_data)-1 \
                     and day_data.close < self.historic_data[i-1].close \
                     and day_data.close < self.historic_data[i+1].close:
-                print(self.historic_data[i-1].close, "<", day_data.close, ">", self.historic_data[i+1].close, "is support")
-                stock_day_data = StockDayData()
-                stock_day_data.is_support = True
-                self.stock_day_data.append(stock_day_data) # TODO hacer solo un append entre sup y res
-            print("Day data", day_data.close)
+                # print(self.historic_data[i-1].close, "<", day_data.close, ">", self.historic_data[i+1].close, "is support")
+                sdd.is_support = True
 
-    def get_resistances(self):
-        for i, day_data in enumerate(self.historic_data):
             if i < len(self.historic_data)-1 \
                     and day_data.close > self.historic_data[i-1].close \
                     and day_data.close > self.historic_data[i+1].close:
-                print(self.historic_data[i-1].close, ">", day_data.close, ">", self.historic_data[i+1].close, "is resistance")
-                stock_day_data = StockDayData()
-                stock_day_data.is_resistance = True
-                self.stock_day_data.append(stock_day_data)  # TODO hacer solo un append entre sup y res
-            print("Day data", day_data.close)
+                # print(self.historic_data[i-1].close, ">", day_data.close, ">", self.historic_data[i+1].close, "is resistance")
+                sdd.is_resistance = True
+
+            self.stock_day_data.append(sdd)
+
+    def print_stock_day_data(self):
+        for s in self.stock_day_data:
+            s.print()

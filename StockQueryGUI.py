@@ -3,7 +3,7 @@ from tkinter import *
 # download and install pillow:
 # http://www.lfd.uci.edu/~gohlke/pythonlibs/#pillow
 from PIL import Image, ImageTk
-from test_stocks import *
+from StockController import *
 
 
 class Window(Frame):
@@ -11,6 +11,7 @@ class Window(Frame):
     def __init__(self, master=None):
         Frame.__init__(self, master)
         self.master = master
+        self.stock_controller = StockController()
         self.init_window()
 
     def init_window(self):
@@ -29,10 +30,14 @@ class Window(Frame):
         menu.add_cascade(label="Edit", menu=edit)
 
         # BUTTONS
-        query_button = Button(self, text="Query", command=main)
+
+        query_button = Button(self, text="Test stocks", command=self.retrieve_data)
         query_button.place(x=0, y=0)
-        quit_button = Button(self, text="Exit", command=self.client_exit)
+        quit_button = Button(self, text="Plot", command=self.stock_controller.stocks_test_plot)
         quit_button.place(x=100, y=0)
+
+    def retrieve_data(self):
+        self.stock_controller.stocks_test_connect()
 
     def show_img(self):
         load = Image.open("chat.png")
@@ -47,7 +52,8 @@ class Window(Frame):
         text = Label(self, text="Hey there good lookin!")
         text.pack()
 
-    def client_exit(self):
+    @staticmethod
+    def client_exit():
         exit()
 
 
