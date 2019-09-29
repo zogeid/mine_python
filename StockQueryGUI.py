@@ -13,7 +13,8 @@ class Window(Frame):
         self.master = master
         self.stock_controller = StockController()
         self.stringvar_input = StringVar()
-        self.resultado = None
+        self.text_resumen = None
+        self.text_resultado = None
         self.init_window()
 
     def init_window(self):
@@ -33,19 +34,27 @@ class Window(Frame):
         quit_button = Button(self, text="Plot", command=self.stock_controller.stocks_test_plot)
         quit_button.grid(row=0, column=3)
 
-        self.resultado = Text(self, width=45, height=10, wrap=WORD)
-        self.resultado.grid(row=3, column=0, columnspan=4)
-        scrollb = Scrollbar(self, command=self.resultado.yview)
-        scrollb.grid(row=3, column=5, sticky='nsew')
-        self.resultado['yscrollcommand'] = scrollb.set
+        self.text_resultado = Text(self, width=90, height=30, wrap=WORD)
+        self.text_resultado.grid(row=4, column=0, columnspan=4)
+        scrollb = Scrollbar(self, command=self.text_resultado.yview)
+        scrollb.grid(row=4, column=5, sticky='nsew')
+        self.text_resultado['yscrollcommand'] = scrollb.set
 
     def retrieve_data(self):
+        self.text_resultado.delete('1.0', END)
+
         s = self.stringvar_input.get()
         self.stock_controller.stocks_test_connect(s)
+
         conn = self.stock_controller.stocks_test_retrieve_data()
+        self.text_resumen = Label(self, text=conn.metadata.get_metadata_data())
+        self.text_resumen.grid(row=3, column=0, columnspan=4)
+
         sdd = conn.stock_day_data
         for i in sdd:
-            self.resultado.insert(END, i.get_stockdaydata_data())
+            self.text_resultado.insert(END, i.get_stockdaydata_data())
+            self.text_resultado.insert(END, '\n')
+            self.text_resultado.insert(END, '\n')
 
     def show_img(self):
         load = Image.open("chat.png")
@@ -69,7 +78,7 @@ class Window(Frame):
 # you can later have windows within windows.
 root = Tk()
 
-root.geometry("400x300")
+root.geometry("800x600")
 
 # creation of an instance
 app = Window(root)

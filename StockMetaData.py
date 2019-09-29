@@ -10,3 +10,7 @@ class StockMetaData:
         print("Symbol:", self.symbol)
         print("Refresh:", self.refresh)
         print("Timezone:", self.timezone)
+
+    def get_metadata_data(self):
+        data = (self.information, self.symbol, self.refresh, self.timezone)
+        return data

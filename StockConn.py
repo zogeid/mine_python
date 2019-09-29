@@ -17,6 +17,7 @@ class StockConn:
         if self.base_url is not None:
             self.url = self.compose_url()
         self.stock_day_data = []
+        self.metadata = None
 
     def compose_url(self):
         url = self.base_url + '/query?function=' + self.function + '&symbol=' + self.symbol + '&datatype=' + self.datatype + '&apikey=' + self.api_key
@@ -35,7 +36,8 @@ class StockConn:
     def get_metadata(self):
         result_json = self.stock_request.json()
         md = result_json['Meta Data']
-        return StockMetaData(md['1. Information'], md['2. Symbol'], md['3. Last Refreshed'], md['4. Time Zone'])
+        self.metadata = StockMetaData(md['1. Information'], md['2. Symbol'], md['3. Last Refreshed'], md['4. Time Zone'])
+        return self.metadata
 
     def parse_all_day_data(self, all_day_data):
         for i in all_day_data:
@@ -47,10 +49,10 @@ class StockConn:
         return self.historic_data
 
     def get_historic_high(self):
-        print("historic_high:", max(node.close for node in self.historic_data))
+        return max(node.close for node in self.historic_data)
 
     def get_historic_low(self):
-        print("historic_low:", min(node.close for node in self.historic_data))
+        return min(node.close for node in self.historic_data)
 
     def is_historic_high(self):
         hh = max(node.close for node in self.historic_data)

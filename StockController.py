@@ -9,6 +9,7 @@ class StockController:
         # Establish connection
         self.conn = None
         self.day_array = None
+        self.metadata = None
 
     def stocks_test_connect(self, input_symbol):
         base_url = 'https://www.alphavantage.co'
@@ -23,8 +24,8 @@ class StockController:
         self.conn.connect()
 
         # Retrieve metadata
-        metadata = self.conn.get_metadata()
-        metadata.print()
+        self.conn.get_metadata()
+        # self.metadata.print()
 
         # Retrieve all historical data for this Symbol
         all_day_data = self.conn.get_all_day_data()
@@ -39,10 +40,10 @@ class StockController:
         self.conn.get_historic_low()
 
         # Show if today is an historic high
-        if self.conn.is_historic_high():
-            print("We have an historic high in", self.conn.historic_data[len(self.conn.historic_data) - 1].close)
-        else:
-            print("Today's", self.conn.historic_data[len(self.conn.historic_data) - 1].close, "is not an historic high :(")
+        # if self.conn.is_historic_high():
+        #     print("We have an historic high in", self.conn.historic_data[len(self.conn.historic_data) - 1].close)
+        # else:
+        #     print("Today's", self.conn.historic_data[len(self.conn.historic_data) - 1].close, "is not an historic high :(")
 
         self.conn.get_supports_and_resistances()
         return self.conn

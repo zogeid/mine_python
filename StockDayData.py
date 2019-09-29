@@ -15,9 +15,9 @@ class StockDayData(StockDay):
         print("Es soporte" if self.is_support else "No es soporte")
 
     def get_stockdaydata_data(self):
-        data = ("Fecha:", self.date, "Apertura:", self.open, "Máximo:", self.high, "Mínimo:", self.low,
-                "Cierre:", self.close, "Ajuste:", self.adjusted_close, "Volumen:", self.volume, "Dividendo:",
-                self.dividend_amount,
-                "Es resistencia" if self.is_resistance else "No es resistencia",
+        data = ""
+        data = data, ("Fecha:", self.date, '\n', "Apertura:", self.open, '\n', "Máximo:", self.high, '\n', "Mínimo:", self.low, '\n',
+                "Cierre:", self.close, '\n', "Ajuste:", self.adjusted_close, '\n', "Volumen:", self.volume, "Dividendo:", '\n',
+                self.dividend_amount, "Es resistencia" if self.is_resistance else "No es resistencia", '\n',
                 "Es soporte" if self.is_support else "No es soporte")
         return data
