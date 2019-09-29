@@ -12,32 +12,40 @@ class Window(Frame):
         Frame.__init__(self, master)
         self.master = master
         self.stock_controller = StockController()
+        self.stringvar_input = StringVar()
+        self.resultado = None
         self.init_window()
 
     def init_window(self):
         self.master.title("Query stocks")
-        self.pack(fill=BOTH, expand=1)
-        menu = Menu(self.master)
-        self.master.config(menu=menu)
-
-        file = Menu(menu)
-        file.add_command(label="Exit", command=self.client_exit)
-        menu.add_cascade(label="File", menu=file)
-
-        edit = Menu(menu)
-        edit.add_command(label="Show Img", command=self.show_img)
-        edit.add_command(label="Show Text", command=self.show_text)
-        menu.add_cascade(label="Edit", menu=edit)
+        self.grid()
 
         # BUTTONS
+        label = Label(self, text="Empresa:")
+        label.grid(row=0, column=0)
+        entry = Entry(self, textvariable=self.stringvar_input)
+        entry.grid(row=0, column=1)
+        self.stringvar_input.set("ADS.DE")
 
-        query_button = Button(self, text="Test stocks", command=self.retrieve_data)
-        query_button.place(x=0, y=0)
+        query_button = Button(self, text="Retrieve data", command=self.retrieve_data)
+        query_button.grid(row=0, column=2)
+
         quit_button = Button(self, text="Plot", command=self.stock_controller.stocks_test_plot)
-        quit_button.place(x=100, y=0)
+        quit_button.grid(row=0, column=3)
+
+        self.resultado = Text(self, width=45, height=10, wrap=WORD)
+        self.resultado.grid(row=3, column=0, columnspan=4)
+        scrollb = Scrollbar(self, command=self.resultado.yview)
+        scrollb.grid(row=3, column=5, sticky='nsew')
+        self.resultado['yscrollcommand'] = scrollb.set
 
     def retrieve_data(self):
-        self.stock_controller.stocks_test_connect()
+        s = self.stringvar_input.get()
+        self.stock_controller.stocks_test_connect(s)
+        conn = self.stock_controller.stocks_test_retrieve_data()
+        sdd = conn.stock_day_data
+        for i in sdd:
+            self.resultado.insert(END, i.get_stockdaydata_data())
 
     def show_img(self):
         load = Image.open("chat.png")

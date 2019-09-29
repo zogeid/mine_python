@@ -26,7 +26,7 @@ class StockConn:
         self.stock_request = requests.get(self.url)
         if self.stock_request.status_code == 200:
             print("Connection done!")
-            print(self.stock_request.json())
+            # print(self.stock_request.json())
 
     def get_all_day_data(self):
         result_json = self.stock_request.json()
@@ -65,13 +65,11 @@ class StockConn:
             if i < len(self.historic_data)-1 \
                     and day_data.close < self.historic_data[i-1].close \
                     and day_data.close < self.historic_data[i+1].close:
-                # print(self.historic_data[i-1].close, "<", day_data.close, ">", self.historic_data[i+1].close, "is support")
                 sdd.is_support = True
 
             if i < len(self.historic_data)-1 \
                     and day_data.close > self.historic_data[i-1].close \
                     and day_data.close > self.historic_data[i+1].close:
-                # print(self.historic_data[i-1].close, ">", day_data.close, ">", self.historic_data[i+1].close, "is resistance")
                 sdd.is_resistance = True
 
             self.stock_day_data.append(sdd)

@@ -32,3 +32,8 @@ class StockDay:
         print("Ajuste:", self.adjusted_close)
         print("Volumen:", self.volume)
         print("Dividendo:", self.dividend_amount)
+
+    def get_stockday_data(self):
+        data = ("Fecha:", self.date, "Apertura:", self.open, "Máximo:", self.high, "Mínimo:", self.low, "Cierre:",
+                self.close, "Ajuste:", self.adjusted_close, "Volumen:", self.volume, "Dividendo:", self.dividend_amount)
+        return data
