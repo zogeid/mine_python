@@ -104,8 +104,8 @@ class StockConn:
         for i, day_data in enumerate(self.historic_data):
             sdd = StockDayData(day_data)
             if turn_resistance and self.is_resistance(day_data):
-                    sdd.is_resistance = True
-                    turn_resistance = False
+                sdd.is_resistance = True
+                turn_resistance = False
             elif not turn_resistance and self.is_support(day_data):
                 sdd.is_support = True
                 turn_resistance = True
