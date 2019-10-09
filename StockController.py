@@ -33,18 +33,8 @@ class StockController:
         return self.day_array
 
     def stocks_test_retrieve_data(self):
-        # Retrieve historical high
         self.conn.get_historic_high()
-
-        # Retrieve historical high
         self.conn.get_historic_low()
-
-        # Show if today is an historic high
-        # if self.conn.is_historic_high():
-        #     print("We have an historic high in", self.conn.historic_data[len(self.conn.historic_data) - 1].close)
-        # else:
-        #     print("Today's", self.conn.historic_data[len(self.conn.historic_data) - 1].close, "is not an historic high :(")
-
         self.conn.get_supports_and_resistances()
         return self.conn
 

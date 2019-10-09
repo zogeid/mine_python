@@ -75,7 +75,14 @@ class StockConn:
     def set_support(self, day_data):
         self.supports.append(day_data)
         self.set_support(day_data)
+
     def is_resistance(self, day_data):
+        # Resistencia: se produce cuando la minima < minima inmediatamente anterior.
+        # Vale lo que vale el max. historico hasta ese momento
+        # 	solo se pone stop cuando hay resistencia
+        # 	cuando, con resistencia puesta, se rompe el max historico, se compra
+        # 	resistencia es el trigger para poner el stop
+
         # Si no hay ninguna resistencia, es el primer valor, lo hacemos resistencia
         if len(self.resistances) == 0:
             self.set_resistance(day_data)
@@ -88,6 +95,8 @@ class StockConn:
         return False
 
     def is_support(self, day_data):
+        # Soporte: se produce cuando se rompe la resistencai.
+        # Es el minimo comprenddido entre el punto A (resistencia previa) y su ruptura(=resistencia) ahora.
         # Si no hay ningun soporte, es el primer valor, lo hacemos soporte
         if len(self.supports) == 0:
             self.set_support(day_data)
