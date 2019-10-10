@@ -3,11 +3,7 @@ from StockMetaData import *
 from StockDayData import *
 
 
-
-
-
 class StockConn:
-
     def __init__(self, base_url=None, function=None, datatype=None, api_key=None, symbol=None):
 
         self.base_url = base_url
@@ -58,6 +54,21 @@ class StockConn:
     def get_historic_high(self):
         return max(node.close for node in self.historic_data)
 
+    def get_historic_high_day(self):
+        historic_high_day = self.historic_data[0]
+        for node in self.historic_data:
+            if node.high > historic_high_day.high:
+                historic_high_day = node
+        return historic_high_day
+
+    def get_historic_high_day_to_date(self, day_data):
+        historic_high_day = self.historic_data[0]
+        index_to = self.historic_data.index(day_data)
+        for node in self.historic_data[:index_to+1]:
+            if node.high > historic_high_day.high:
+                historic_high_day = node
+        return historic_high_day
+
     def get_historic_low(self):
         return min(node.close for node in self.historic_data)
 
@@ -74,52 +85,59 @@ class StockConn:
 
     def set_support(self, day_data):
         self.supports.append(day_data)
-        self.set_support(day_data)
+        self.current_support = day_data
 
-    def is_resistance(self, day_data):
-        # Resistencia: se produce cuando la minima < minima inmediatamente anterior.
-        # Vale lo que vale el max. historico hasta ese momento
-        # 	solo se pone stop cuando hay resistencia
-        # 	cuando, con resistencia puesta, se rompe el max historico, se compra
-        # 	resistencia es el trigger para poner el stop
-
-        # Si no hay ninguna resistencia, es el primer valor, lo hacemos resistencia
-        if len(self.resistances) == 0:
-            self.set_resistance(day_data)
-            return True
-        else:
-            # Es mayor a la resistencia actual, tenemos nueva resistencia, la actualizamos y la añadimos
-            if day_data.high > self.current_resistance.high:
-                self.set_resistance(day_data)
-                return True
-        return False
-
-    def is_support(self, day_data):
-        # Soporte: se produce cuando se rompe la resistencai.
-        # Es el minimo comprenddido entre el punto A (resistencia previa) y su ruptura(=resistencia) ahora.
-        # Si no hay ningun soporte, es el primer valor, lo hacemos soporte
-        if len(self.supports) == 0:
-            self.set_support(day_data)
-            return True
-        else:
-            # TODO no tengo clara la definicion
-            if day_data.high > self.current_resistance.high:
-                self.set_resistance(day_data)
-                return True
-        return False
+    def print_supports_and_resistances(self):
+        print("Current resistance: ")
+        self.current_resistance.print()
+        print("Current support: ")
+        self.current_support.print()
 
     def get_supports_and_resistances(self):
+        # sdd = StockDayData(day_data)
         turn_resistance = True
         for i, day_data in enumerate(self.historic_data):
-            sdd = StockDayData(day_data)
-            if turn_resistance and self.is_resistance(day_data):
-                sdd.is_resistance = True
-                turn_resistance = False
-            elif not turn_resistance and self.is_support(day_data):
-                sdd.is_support = True
-                turn_resistance = True
+            # Primera iteración
+            # Resistencia: se produce cuando la minima < minima inmediatamente anterior.
+            # Vale lo que vale el max. historico hasta ese momento
+            if turn_resistance:
+                if 0 < i < len(self.historic_data) - 1 and day_data.low < self.historic_data[i - 1].low:  # min < min
+                    # Si no hay ninguna resistencia, coge el max. historico hasta ese momento
+                    if len(self.resistances) == 0:
+                        # coger el máximo histórico hasta ese momento
+                        self.set_resistance(self.get_historic_high_day_to_date(day_data))
+                        turn_resistance = False
 
-            self.stock_day_data.append(sdd)
+                    # Tenemos resistencias calculadas previamente
+                    else:
+                        # Si es mayor a la resistencia actual, la ñadimos como nueva resistencia
+                        if day_data.high > self.current_resistance.high:
+                            self.set_resistance(day_data)
+                            turn_resistance = False
+
+            # Soporte: se produce cuando se rompe la resistencia
+            # Es el minimo comprendido entre el punto A (resistencia previa) y su ruptura(=resistencia) ahora.
+            elif not turn_resistance:
+                if len(self.resistances) == 1:  # Si tenemos 1 resistencias miramos desde el día 0
+                    prev_resistance = self.historic_data[0]
+                    current_low = prev_resistance
+
+                    for hd in self.historic_data:
+                        if hd.date >= prev_resistance.date:
+                            if hd.low < current_low.low:
+                                current_low = hd
+
+                else:  # Tiene que haber al menos 2: la recien rota y la del previo if
+                    prev_resistance = self.resistances[-2]
+                    current_low = prev_resistance
+
+                    for hd in self.historic_data:
+                        if hd.date >= prev_resistance.date:
+                            if hd.low < current_low.low:
+                                current_low = hd
+
+                turn_resistance = True
+                self.set_support(current_low)
 
     def print_stock_day_data(self):
         for s in self.stock_day_data:
