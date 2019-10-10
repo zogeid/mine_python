@@ -1,6 +1,6 @@
 from StockConn import *
 from StockPlot import *
-from StockData import *
+from offlinedata_StockData import *
 
 
 def main():

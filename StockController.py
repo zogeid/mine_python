@@ -1,12 +1,11 @@
 from StockConn import *
 from StockPlot import *
-from StockData import *
+from offlinedata_StockData import *
+from offlinedata_StockData_short import *
 
 
 class StockController:
-
     def __init__(self):
-        # Establish connection
         self.conn = None
         self.day_array = None
         self.metadata = None
@@ -19,7 +18,6 @@ class StockController:
         datatype = 'json'
         api_key = '2HZ8XGG3MD98X75U'
 
-        # Establish connection
         self.conn = StockConn(base_url, func, datatype, api_key, symbol)
         self.conn.connect()
 
@@ -36,10 +34,10 @@ class StockController:
         self.conn.get_historic_high()
         self.conn.get_historic_low()
         self.conn.get_supports_and_resistances()
+        self.conn.print_supports_and_resistances()
         return self.conn
 
     def stocks_test_plot(self):
-        # Plot retrieved data
         plot(self.day_array)
 
     def stocks_test(self):
@@ -54,8 +52,8 @@ class StockController:
         if datos_de_prueba:
             print('usando datos de prueba')
             # Establish connection
-            self.self.conn = StockConn()
-            all_day_data = stock_data
+            self.conn = StockConn()
+            all_day_data = stock_data_short
             day_array = self.conn.parse_all_day_data(all_day_data)
         else:
             # Establish connection

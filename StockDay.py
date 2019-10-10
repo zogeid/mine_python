@@ -4,7 +4,6 @@ class StockDay:
         self.date = date
         self.volume = volume
         self.dividend_amount = dividend_amount
-
         self.open = None
         self.high = None
         self.low = None

@@ -44,11 +44,13 @@ class Window(Frame):
         self.text_resultado.delete('1.0', END)
 
         s = self.stringvar_input.get()
-        self.stock_controller.stocks_test_connect(s)
+        # self.stock_controller.stocks_test_connect(s)
+        self.stock_controller.stocks_test()  # linea para hcer pruebas con datos locales
 
         conn = self.stock_controller.stocks_test_retrieve_data()
-        self.text_resumen = Label(self, text=conn.metadata.get_metadata_data())
-        self.text_resumen.grid(row=3, column=0, columnspan=4)
+        if conn.metadata is not None:
+            self.text_resumen = Label(self, text=conn.metadata.get_metadata_data())
+            self.text_resumen.grid(row=3, column=0, columnspan=4)
 
         sdd = conn.stock_day_data
         for i in sdd:
